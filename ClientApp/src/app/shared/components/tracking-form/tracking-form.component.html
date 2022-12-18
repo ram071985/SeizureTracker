@@ -1,0 +1,125 @@
+<div class="app-container mat-app-background container-fluid h-100">
+  <h1 class="text-center p-5">Track Seizure</h1>
+  <form class="" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div
+      class="container-fluid d-flex flex-column justify-content-center col-sm-12 col-xl-5"
+    >
+      <mat-form-field appearance="fill">
+        <mat-label>Choose a date</mat-label>
+        <input
+          type="text"
+          name="date"
+          matInput
+          formControlName="date"
+          [matDatepicker]="picker"
+          required
+        />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="" appearance="fill">
+        <mat-label>Choose a time</mat-label>
+        <input
+          type="text"
+          formControlName="timeOfSeizure"
+          name="timeOfSeizure"
+          matInput
+        />
+        <mat-hint>HH:MM</mat-hint>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>AM/PM</mat-label>
+        <mat-select name="amPM" formControlName="amPM">
+          <mat-option *ngFor="let time of amPMInput" [value]="time">
+            {{ time }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Seizure Strength</mat-label>
+        <mat-select name="seizureStrength" formControlName="seizureStrength">
+          <mat-option
+            *ngFor="let number of seizureStrengthInput"
+            [value]="number"
+          >
+            {{ number }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <!-- <mat-label>Seizure Type</mat-label>
+    <div class="row">
+      <ul class="type-checkbox flex-row">
+        <li *ngFor="let type of seizureTypesInput">
+          <mat-checkbox [value]="type.completed" name="seizureType" formControlName="seizureType" name="seizureType">
+            {{ type.name }}
+          </mat-checkbox>
+        </li>
+      </ul>
+    </div> -->
+      <mat-form-field appearance="fill">
+        <mat-label>Seizure Type</mat-label>
+        <mat-select name="seizureType" formControlName="seizureType">
+          <mat-option *ngFor="let type of seizureTypesInput" [value]="type">
+            {{ type }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Medication change</mat-label>
+        <mat-select name="medicationChange" formControlName="medicationChange">
+          <mat-option
+            *ngFor="let change of medicationChangeInput"
+            [value]="change"
+          >
+            {{ change }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Medication change explanation..</mat-label>
+        <textarea
+          name="medicationChangeExplanation"
+          formControlName="medicationChangeExplanation"
+          matInput
+        ></textarea>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Ketones level</mat-label>
+        <mat-select name="ketonesLevel" formControlName="ketonesLevel">
+          <mat-option *ngFor="let level of ketoneLevelsInput" [value]="level">
+            {{ level }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Last night's amount in hours</mat-label>
+        <mat-select name="sleepAmount" formControlName="sleepAmount">
+          <mat-option *ngFor="let hours of sleepInHoursInput" [value]="hours">
+            {{ hours }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Notes...</mat-label>
+        <textarea
+          name="notes"
+          formControlName="notes"
+          matInput
+        ></textarea>
+      </mat-form-field>
+      <button
+        type="submit"
+        class="my-3 w-100"
+        mat-raised-button
+        color="primary"
+        [disabled]="form.invalid"
+      >
+        SUBMIT
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,69 @@
+<table mat-table [dataSource]="seizureRecords" class="mat-elevation-z8">
+  <!--- Note that these columns can be defined in any order.
+        The actual rendered columns are set as a property on the row definition" -->
+
+   
+
+  <!-- Position Column -->
+  <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef>Date</th>
+    <td mat-cell *matCellDef="let element">
+      {{ this.datePipe.transform(element.date, "M/d/yy") }}
+    </td>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="time">
+    <th mat-header-cell *matHeaderCellDef>Time</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.timeOfSeizure + (!element.amPm ? "(N/A)" : element.amPm) }}
+    </td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="seizureStrength">
+    <th mat-header-cell *matHeaderCellDef>Strength</th>
+    <td mat-cell *matCellDef="let element">{{ element.seizureStrength }}</td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="medicationChange">
+    <th mat-header-cell *matHeaderCellDef>Medication Change</th>
+    <td mat-cell *matCellDef="let element">{{ element.medicationChange }}</td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="medicationChangeExplanation">
+    <th mat-header-cell *matHeaderCellDef>M.C. Explanation</th>
+    <td mat-cell *matCellDef="let element">
+      {{
+        !element.medicationChangeExplanation
+          ? "N/A"
+          : element.medicationChangeExplanation
+      }}
+    </td>
+  </ng-container>
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="ketonesLevel">
+    <th mat-header-cell *matHeaderCellDef>Ketones Level</th>
+    <td mat-cell *matCellDef="let element">{{ element.ketonesLevel }}</td>
+  </ng-container>
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="seizureType">
+    <th mat-header-cell *matHeaderCellDef>Seizure Type</th>
+    <td mat-cell *matCellDef="let element">{{ element.seizureType }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="sleepAmount">
+    <th mat-header-cell *matHeaderCellDef>Sleep Amount</th>
+    <td mat-cell *matCellDef="let element">{{ element.sleepAmount }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="notes">
+    <th mat-header-cell *matHeaderCellDef>Notes</th>
+    <td mat-cell *matCellDef="let element">{{ element.notes }}</td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+<mat-spinner mode="indeterminate" *ngIf="loading" class="m-auto"></mat-spinner>
