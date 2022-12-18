@@ -3,7 +3,7 @@
 
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# compiled output
+# compiled output TEST
 /ClientApp/dist
 /ClientApp/dist-server
 /ClientApp/tmp
