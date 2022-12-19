@@ -1,4 +1,4 @@
-public record SeizureFormDto
+public class SeizureFormDto
 {
     public string Date { get; init; } = default!;
     public string TimeOfSeizure { get; init; }

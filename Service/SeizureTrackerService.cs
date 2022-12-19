@@ -13,9 +13,9 @@ public class SeizureTrackerService : ISeizureTrackerService
         _azureTableService = azureTableService;
     }
 
-    public async Task<SeizureFormDto[]> GetRecords()
+    public async Task<SeizureFormReturnModel[]> GetRecords()
     {
-        List<SeizureFormDto> seizureForm = new();
+        List<SeizureFormReturnModel> seizureForm = new();
 
         try
         {
@@ -24,7 +24,14 @@ public class SeizureTrackerService : ISeizureTrackerService
             if (!records.Any())
                 return seizureForm.ToArray();
 
-            return records.Select(r => r.MapToSeizureFormDto()).ToArray();
+            var parseRecords = records.Select(r => r.MapToSeizureFormDto()).ToArray();
+
+            var seizureDto =  new SeizureFormReturnModel()
+            {
+                Header = parseRecords.GroupBy(r => r.Date).Select(g => g.ToArray())
+            };
+
+            return seizureForm.ToArray();
         }
         catch (Exception ex)
         {

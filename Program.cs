@@ -1,7 +1,6 @@
 
 
 using seizure_tracker.Service;
-using seizure_tracker.Service;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 

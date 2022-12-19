@@ -1,10 +1,8 @@
-<table mat-table [dataSource]="seizureRecords" class="mat-elevation-z8">
-  <!--- Note that these columns can be defined in any order.
-        The actual rendered columns are set as a property on the row definition" -->
+<div class="container">
+  <!-- <table mat-table [dataSource]="seizureRecords" class="mat-elevation-z8">
 
-   
 
-  <!-- Position Column -->
+
   <ng-container matColumnDef="date">
     <th mat-header-cell *matHeaderCellDef>Date</th>
     <td mat-cell *matCellDef="let element">
@@ -12,7 +10,7 @@
     </td>
   </ng-container>
 
-  <!-- Name Column -->
+
   <ng-container matColumnDef="time">
     <th mat-header-cell *matHeaderCellDef>Time</th>
     <td mat-cell *matCellDef="let element">
@@ -20,19 +18,19 @@
     </td>
   </ng-container>
 
-  <!-- Symbol Column -->
+ 
   <ng-container matColumnDef="seizureStrength">
     <th mat-header-cell *matHeaderCellDef>Strength</th>
     <td mat-cell *matCellDef="let element">{{ element.seizureStrength }}</td>
   </ng-container>
 
-  <!-- Symbol Column -->
+
   <ng-container matColumnDef="medicationChange">
     <th mat-header-cell *matHeaderCellDef>Medication Change</th>
     <td mat-cell *matCellDef="let element">{{ element.medicationChange }}</td>
   </ng-container>
 
-  <!-- Symbol Column -->
+ 
   <ng-container matColumnDef="medicationChangeExplanation">
     <th mat-header-cell *matHeaderCellDef>M.C. Explanation</th>
     <td mat-cell *matCellDef="let element">
@@ -43,12 +41,12 @@
       }}
     </td>
   </ng-container>
-  <!-- Symbol Column -->
+  
   <ng-container matColumnDef="ketonesLevel">
     <th mat-header-cell *matHeaderCellDef>Ketones Level</th>
     <td mat-cell *matCellDef="let element">{{ element.ketonesLevel }}</td>
   </ng-container>
-  <!-- Symbol Column -->
+
   <ng-container matColumnDef="seizureType">
     <th mat-header-cell *matHeaderCellDef>Seizure Type</th>
     <td mat-cell *matCellDef="let element">{{ element.seizureType }}</td>
@@ -65,5 +63,30 @@
   </ng-container>
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-</table>
-<mat-spinner mode="indeterminate" *ngIf="loading" class="m-auto"></mat-spinner>
+</table> -->
+  <mat-accordion>
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ expansionDateColumn }}
+        </mat-panel-title>
+        <mat-panel-title>
+          {{ expansionCountColumn }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+    </mat-expansion-panel>
+    <mat-expansion-panel *ngFor="let record of seizureRecords"
+      (opened)="panelOpenState = true"
+      (closed)="panelOpenState = false"
+    >
+      <mat-expansion-panel-header>
+        {{ this.datePipe.transform(record.date, "M/d/yy")}}
+      </mat-expansion-panel-header>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <mat-spinner
+    mode="indeterminate"
+    *ngIf="loading"
+    class="m-auto"
+  ></mat-spinner>
+</div>
