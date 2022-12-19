@@ -23,7 +23,7 @@ public class SeizureTrackerController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<SeizureFormReturnModel[]> GetSeizureRecords()
+    public async Task<IEnumerable<SeizureFormDto[]>> GetSeizureRecords()
     {
         try
         {
