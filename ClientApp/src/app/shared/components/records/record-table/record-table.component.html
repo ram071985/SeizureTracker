@@ -67,21 +67,25 @@
   <mat-accordion>
     <mat-expansion-panel hideToggle>
       <mat-expansion-panel-header>
-        <mat-panel-title>
+        <mat-panel-title class="">
           {{ expansionDateColumn }}
-        </mat-panel-title>
-        <mat-panel-title>
-          {{ expansionCountColumn }}
         </mat-panel-title>
       </mat-expansion-panel-header>
     </mat-expansion-panel>
-    <mat-expansion-panel *ngFor="let record of seizureRecords"
+    <mat-expansion-panel
+      *ngFor="let record of seizureRecords"
       (opened)="panelOpenState = true"
       (closed)="panelOpenState = false"
+      class=""
     >
-      <mat-expansion-panel-header>
-        {{ this.datePipe.transform(record.date, "M/d/yy")}}
+      <mat-expansion-panel-header class="d-flex">
+        <span class="d-flex justify-content-end">{{
+          this.datePipe.transform(record[0].date, "M/d/yy")
+        }}</span>
       </mat-expansion-panel-header>
+      <mat-panel-description *ngFor="let item of record">
+        <app-expansion-item></app-expansion-item>
+      </mat-panel-description>
     </mat-expansion-panel>
   </mat-accordion>
   <mat-spinner

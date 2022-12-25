@@ -18,6 +18,8 @@ import { RecordsComponent } from './shared/components/records/records.component'
 import { RecordTableComponent } from './shared/components/records/record-table/record-table.component';
 import { RecordTableItemsComponent } from './shared/components/records/record-table-items/record-table-items.component';
 import { DatePipe } from '@angular/common';
+import { ExpansionItemComponent } from './shared/components/records/record-table-items/expansion-item/expansion-item.component';
+import { ExpansionRowComponent } from './shared/components/records/record-table-items/expansion-item/expansion-row/expansion-row.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { DatePipe } from '@angular/common';
     TrackingFormComponent,
     RecordsComponent,
     RecordTableComponent,
-    RecordTableItemsComponent
+    RecordTableItemsComponent,
+    ExpansionItemComponent,
+    ExpansionRowComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
