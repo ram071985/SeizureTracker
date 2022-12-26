@@ -1,3 +1,40 @@
-<div class="d-flex flex-column">
-
-</div>
+<span> # {{recordNumber + 1}}</span>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Value</th>
+  </tr>
+  <tr>
+    <td>Time</td>
+    <td>{{item.timeOfSeizure + item.amPm}}</td>
+  </tr>
+  <tr>
+    <td>Strength</td>
+    <td>{{item.seizureStrength}}</td>
+  </tr>
+  <tr>
+    <td>Seizure Type</td>
+    <td>{{item.seizureType}}</td>
+  </tr>
+  <tr>
+    <td>Medication Change</td>
+    <td>{{item.medicationChange}}</td>
+  </tr>
+  <tr>
+    <td>M.C. Explanation</td>
+    <td>{{item.medicationChangeExplanation}}</td>
+  </tr>
+  <tr>
+    <td>Ketones Level</td>
+    <td>{{item.ketonesLevel}}</td>
+  </tr>
+  <tr>
+    <td>Sleep Amount</td>
+    <td>{{item.sleepAmount}}</td>
+  </tr>
+  <tr>
+    <td>Notes</td>
+    <td>{{item.notes}}</td>
+  </tr>
+</table>
+<hr class="w-100"/>

@@ -5,12 +5,12 @@ export interface MainForm {
     partitionKey?: string,
     date: string,
     timeOfSeizure: string,
-    seizureStrength: number,
+    seizureStrength: any,
     medicationChange: string,
     medicationChangeExplanation: string,
-    ketonesLevel: number,
+    ketonesLevel: any,
     seizureType: string,
-    sleepAmount: number,
-    amPM: string,
+    sleepAmount: any,
+    amPm: string,
     notes: string
 }

@@ -27,8 +27,10 @@ export class RecordTableComponent implements OnInit {
     displayedColumns: string[] = ['date', 'time', 'seizureStrength', 'medicationChange', 'medicationChangeExplanation', 'ketonesLevel', 'seizureType', 'sleepAmount', 'notes'];
     endpoint = '';
     seizureRecords: MainForm[];
+    mappedRecords: {"id": string, "value": string}[];
     loading: boolean;
     panelOpenState = false;
+    map = new Map<string, string>();
 
     expansionDateColumn = 'DATE';
     expansionCountColumn = 'SEIZURE COUNT';
@@ -48,10 +50,24 @@ export class RecordTableComponent implements OnInit {
             this.loading = false;
             this.seizureRecords = records;
 
+            // this.seizureRecords.map((x) => {
+            // this.seizureRecords.map((item, i) => {
+            //     this.mappedRecords.push({ name: Object.keys(this.convertFromCamelCase(item[i])), value: item })
+            // })
+        //    const dick = this.seizureRecords.forEach((...[key, value]) => key[value].forEach((...[key, value]) => {
+        //     console.log(key)
+        //    }))
+            
             console.log('Seizure Records: ', this.seizureRecords);
         });
-        
 
+
+    }
+
+    convertFromCamelCase(text: string) {
+        const result = text.replace(/([A-Z])/g, " $1");
+        const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
+        return finalResult;
     }
 
     getRecords(): Observable<MainForm[]> {

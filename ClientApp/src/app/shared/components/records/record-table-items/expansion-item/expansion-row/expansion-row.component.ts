@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { MainForm } from 'src/models/mainForm.model';
 
 @Component({
     selector: 'app-expansion-row',
@@ -7,5 +8,6 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 
 export class ExpansionRowComponent {
-    
+    @Input() row: string = '';
+    @Input() item: MainForm;
 }
