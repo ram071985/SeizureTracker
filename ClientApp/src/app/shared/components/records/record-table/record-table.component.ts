@@ -49,19 +49,18 @@ export class RecordTableComponent implements OnInit {
         this.loading = false;
         this.getRecords().subscribe((res: SeizureReturn) => {
             this.loading = false;
-
-            this.pageIterator = new Array(res.pageCount);
+            let processPageCount = this.setPageCount(res.pageCount);
+            this.pageIterator = new Array(processPageCount);
             this.seizureRecords = res.seizures;
-            // this.seizureRecords.map((x) => {
-            // this.seizureRecords.map((item, i) => {
-            //     this.mappedRecords.push({ name: Object.keys(this.convertFromCamelCase(item[i])), value: item })
-            // })
-            //    const dick = this.seizureRecords.forEach((...[key, value]) => key[value].forEach((...[key, value]) => {
-            //     console.log(key)
-            //    }))
-
             console.log('Seizure Records: ', this.seizureRecords);
         });
+    }
+
+    setPageCount(pageCount: number) {
+        if (pageCount % 1 != 0) {
+            return Math.floor(pageCount + 1);
+        }
+        return;
     }
 
     changePageNumber(pageNumber: number) {
@@ -71,7 +70,8 @@ export class RecordTableComponent implements OnInit {
         this.page = pageNumber;
         this.getRecords().subscribe((res: SeizureReturn) => {
             this.loading = false;
-            this.pageIterator = new Array(res.pageCount);
+            let processPageCount = this.setPageCount(res.pageCount);
+            this.pageIterator = new Array(processPageCount);
             this.seizureRecords = res.seizures;
         });
     }
@@ -92,10 +92,4 @@ export class RecordTableComponent implements OnInit {
             )
             .pipe(retry(1), catchError(err => { throw 'The query failed. Details: ' + err }));
     }
-    //       .post<any>(
-    //           this.endpoint + '/seizuretracker',
-    //               JSON.stringify(this.form.value),
-    //               this.httpHeader
-    //   )
-    //   .pipe(retry(1), catchError(this.processError));
 }

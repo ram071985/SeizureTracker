@@ -29,17 +29,17 @@ public class SeizureTrackerService : ISeizureTrackerService
 
             var groupByDate = parseRecords.GroupBy(r => r.Date).Select(g => g.ToList());
 
-            var pageCount = groupByDate.Count() > 10 ? groupByDate.Count() / 10 : 1;
-            seizures.PageCount = pageCount;
-
             var groups = groupByDate.ToList();
 
-            var iteration = pageNumber != 1 ? pageNumber * 10 - 10 : 0;
+            var pageSize = 10;
 
-            for (var i = iteration; i < iteration + 10; i++)
-            {
-                seizures.Seizures.Add(groups[i]);
-            }
+            var skip = pageSize * (pageNumber - 1);
+
+            seizures.Seizures = groupByDate.Select(x => x).Skip(skip).Take(pageSize).ToList();
+
+            var pageCount = groupByDate.Count() > 10 ? (double)groupByDate.Count() / 10 : 1;
+
+            seizures.PageCount = pageCount;
 
             return seizures;
         }
@@ -49,6 +49,15 @@ public class SeizureTrackerService : ISeizureTrackerService
             throw;
         }
 
+    }
+
+    private Tuple<int, int> setIndexes(int pageNumber)
+    {
+        var topIndex = pageNumber * 10 - 1;
+
+        var bottomIndex = pageNumber * 10 - 10;
+
+        return new Tuple<int, int>(topIndex, bottomIndex);
     }
 
     public async Task<SeizureFormDto> AddRecord(SeizureFormDto form)
@@ -68,8 +77,6 @@ public class SeizureTrackerService : ISeizureTrackerService
         }
 
     }
-
-    // private async Task<SeizureForm[]> getRecords() => await _azureTableService.GetRecords();
 
     private async Task<List<SeizureForm>> getRecords() => await _azureTableService.GetRecords();
     private async Task<SeizureForm> addRecord(SeizureForm form) => await _azureTableService.AddRecord(form);
