@@ -12,5 +12,7 @@ export interface MainForm {
     seizureType: string,
     sleepAmount: any,
     amPm: string,
-    notes: string
+    notes: string,
+    pageCount?: number,
+    pageNumber?: number
 }

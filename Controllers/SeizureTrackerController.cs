@@ -22,13 +22,14 @@ public class SeizureTrackerController : ControllerBase
         _seizureTrackerService = seizureTrackerService;
     }
 
-    [HttpGet]
-    public async Task<IEnumerable<SeizureFormDto[]>> GetSeizureRecords()
+    [HttpPost("records")]
+    public async Task<SeizureFormReturn> GetSeizureRecords([FromBody] int page = 1)
     {
         try
         {
-            var records = await _seizureTrackerService.GetRecords();
+            var records = await _seizureTrackerService.GetRecords(page);
 
+            
             return records;
         }
         catch (Exception ex)

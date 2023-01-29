@@ -20,6 +20,7 @@ import { RecordTableItemsComponent } from './shared/components/records/record-ta
 import { DatePipe } from '@angular/common';
 import { ExpansionItemComponent } from './shared/components/records/record-table-items/expansion-item/expansion-item.component';
 import { ExpansionRowComponent } from './shared/components/records/record-table-items/expansion-item/expansion-row/expansion-row.component';
+import { PaginationComponent } from './shared/components/pagination/pagination.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { ExpansionRowComponent } from './shared/components/records/record-table-
     RecordTableComponent,
     RecordTableItemsComponent,
     ExpansionItemComponent,
-    ExpansionRowComponent
+    ExpansionRowComponent,
+    PaginationComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

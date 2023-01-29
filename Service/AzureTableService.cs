@@ -25,7 +25,7 @@ public class AzureTableService : IAzureTableService
         return tableClient;
     }
 
-    public async Task<SeizureForm[]> GetRecords()
+    public async Task<List<SeizureForm>> GetRecords()
     {
         List<SeizureForm> seizureRecords = new();
 
@@ -39,7 +39,8 @@ public class AzureTableService : IAzureTableService
                 seizureRecords.Add(entity);
             }
             seizureRecords = seizureRecords.OrderByDescending(x => DateTime.Parse(x.Date)).ThenByDescending(x => DateTime.Parse(x.TimeOfSeizure)).ToList();
-            return seizureRecords.ToArray();
+
+            return seizureRecords;
         }
         catch (Exception ex)
         {

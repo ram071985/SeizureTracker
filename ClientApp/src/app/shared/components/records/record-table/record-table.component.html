@@ -31,4 +31,11 @@
     *ngIf="loading"
     class="m-auto"
   ></mat-spinner>
-</div>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li (click)="changePageNumber(page - 1)" class="page-item"><a (click)="$event.preventDefault()" class="page-link" href="#">Previous</a></li>
+      <li (click)="changePageNumber(index + 1)" *ngFor="let page of pageIterator; let index = index" class="page-item"><a (click)="$event.preventDefault()" class="page-link" href="#">{{ index + 1 }}</a></li>
+      <li (click)="changePageNumber(page + 1)" class="page-item"><a (click)="$event.preventDefault()" class="page-link" href="#">Next</a></li>
+    </ul>
+  </nav>
+</div> 

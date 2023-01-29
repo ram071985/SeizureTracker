@@ -13,20 +13,35 @@ public class SeizureTrackerService : ISeizureTrackerService
         _azureTableService = azureTableService;
     }
 
-    public async Task<IEnumerable<SeizureFormDto[]>> GetRecords()
+    public async Task<SeizureFormReturn> GetRecords(int pageNumber)
     {
-        IEnumerable<SeizureFormDto[]> seizureForm = Enumerable.Empty<SeizureFormDto[]>();
+        SeizureFormReturn seizures = new();
+        seizures.Seizures = new();
 
         try
         {
             var records = await getRecords();
 
             if (!records.Any())
-                return seizureForm;
+                return seizures;
 
-            var parseRecords = records.Select(r => r.MapToSeizureFormDto()).ToArray();
+            var parseRecords = records.Select(r => r.MapToSeizureFormDto()).ToList();
 
-            return parseRecords.GroupBy(r => r.Date).Select(g => g.ToArray());
+            var groupByDate = parseRecords.GroupBy(r => r.Date).Select(g => g.ToList());
+
+            var pageCount = groupByDate.Count() > 10 ? groupByDate.Count() / 10 : 1;
+            seizures.PageCount = pageCount;
+
+            var groups = groupByDate.ToList();
+
+            var iteration = pageNumber != 1 ? pageNumber * 10 - 10 : 0;
+
+            for (var i = iteration; i < iteration + 10; i++)
+            {
+                seizures.Seizures.Add(groups[i]);
+            }
+
+            return seizures;
         }
         catch (Exception ex)
         {
@@ -54,7 +69,9 @@ public class SeizureTrackerService : ISeizureTrackerService
 
     }
 
-    private async Task<SeizureForm[]> getRecords() => await _azureTableService.GetRecords();
+    // private async Task<SeizureForm[]> getRecords() => await _azureTableService.GetRecords();
+
+    private async Task<List<SeizureForm>> getRecords() => await _azureTableService.GetRecords();
     private async Task<SeizureForm> addRecord(SeizureForm form) => await _azureTableService.AddRecord(form);
 
 
