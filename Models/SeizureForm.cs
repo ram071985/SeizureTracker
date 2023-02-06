@@ -11,7 +11,7 @@ public record SeizureForm : ITableEntity
     public int SeizureStrength { get; init; }
     public string MedicationChange { get; set; }
     public string MedicationChangeExplanation { get; set; }
-    public int KetonesLevel { get; set; }
+    public double KetonesLevel { get; set; } 
     public string SeizureType { get; set; }
     public int SleepAmount { get; set; }
     public string AmPm { get; set; }

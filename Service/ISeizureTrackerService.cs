@@ -4,4 +4,5 @@ public interface ISeizureTrackerService
 {
     public Task<SeizureFormReturn> GetRecords(int pageNumber = 1);
     public Task<SeizureFormDto> AddRecord(SeizureFormDto form);
+    public Task<SeizureFormDto> CheckForKetones(string date);
 }

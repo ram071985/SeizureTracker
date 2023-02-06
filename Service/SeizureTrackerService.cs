@@ -5,12 +5,15 @@ public class SeizureTrackerService : ISeizureTrackerService
 {
     private readonly IConfiguration _config;
     private readonly IAzureTableService _azureTableService;
+    private string _filter;
 
 
     public SeizureTrackerService(IConfiguration config, IAzureTableService azureTableService)
     {
         _config = config;
         _azureTableService = azureTableService;
+
+        _filter = "";
     }
 
     public async Task<SeizureFormReturn> GetRecords(int pageNumber)
@@ -20,7 +23,7 @@ public class SeizureTrackerService : ISeizureTrackerService
 
         try
         {
-            var records = await getRecords();
+            var records = await getRecords(_filter);
 
             if (!records.Any())
                 return seizures;
@@ -51,13 +54,32 @@ public class SeizureTrackerService : ISeizureTrackerService
 
     }
 
-    private Tuple<int, int> setIndexes(int pageNumber)
+    public async Task<SeizureFormDto> CheckForKetones(string date)
     {
-        var topIndex = pageNumber * 10 - 1;
+        SeizureFormDto seizure = new();
 
-        var bottomIndex = pageNumber * 10 - 10;
+        _filter = $"Date eq datetime'{date}'";
 
-        return new Tuple<int, int>(topIndex, bottomIndex);
+        try
+        {
+            var records = await getDateRecords(date);
+
+            if (!records.Any())
+                return seizure;
+
+            var parseRecords = records.Select(r => r.MapToSeizureFormDto()).ToList();
+
+            seizure = parseRecords.FirstOrDefault(x => double.Parse(x.KetonesLevel) > 0.0d);
+
+            return seizure;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+
+            throw;
+        }
+
     }
 
     public async Task<SeizureFormDto> AddRecord(SeizureFormDto form)
@@ -78,8 +100,7 @@ public class SeizureTrackerService : ISeizureTrackerService
 
     }
 
-    private async Task<List<SeizureForm>> getRecords() => await _azureTableService.GetRecords();
+    private async Task<List<SeizureForm>> getRecords(string queryFilter) => await _azureTableService.GetRecords(queryFilter);
+    private async Task<List<SeizureForm>> getDateRecords(string date) => await _azureTableService.GetRecordsByDate(date);
     private async Task<SeizureForm> addRecord(SeizureForm form) => await _azureTableService.AddRecord(form);
-
-
 }

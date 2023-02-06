@@ -25,20 +25,22 @@ public class AzureTableService : IAzureTableService
         return tableClient;
     }
 
-    public async Task<List<SeizureForm>> GetRecords()
+    public async Task<List<SeizureForm>> GetRecords(string queryFilter = "")
     {
         List<SeizureForm> seizureRecords = new();
 
         try
         {
             var tableClient = await GetTableClient();
-            AsyncPageable<SeizureForm> records = tableClient.QueryAsync<SeizureForm>(filter: "");
+            AsyncPageable<SeizureForm> records = tableClient.QueryAsync<SeizureForm>(filter: queryFilter);
 
             await foreach (SeizureForm entity in records)
             {
                 seizureRecords.Add(entity);
             }
-            seizureRecords = seizureRecords.OrderByDescending(x => DateTime.Parse(x.Date)).ThenByDescending(x => DateTime.Parse(x.TimeOfSeizure)).ToList();
+
+            if (!String.IsNullOrEmpty(queryFilter))
+                seizureRecords = seizureRecords.OrderByDescending(x => DateTime.Parse(x.Date)).ThenByDescending(x => DateTime.Parse(x.TimeOfSeizure)).ToList();
 
             return seizureRecords;
         }
@@ -48,6 +50,29 @@ public class AzureTableService : IAzureTableService
             throw;
         }
 
+    }
+
+    public async Task<List<SeizureForm>> GetRecordsByDate(string date)
+    {
+        List<SeizureForm> seizureRecords = new();
+        SeizureForm seizureRecord = new();
+        try
+        {
+            var tableClient = await GetTableClient();
+            AsyncPageable<SeizureForm> records = tableClient.QueryAsync<SeizureForm>(x => x.Date == date);
+
+            await foreach (SeizureForm entity in records)
+            {
+                seizureRecords.Add(entity);
+            }
+
+            return seizureRecords;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            throw;
+        }
     }
 
     public async Task<SeizureForm> AddRecord(SeizureForm entity)

@@ -12,7 +12,7 @@ internal static class AzureModelToDto
             SeizureType = form.SeizureType,
             MedicationChange = form.MedicationChange,
             MedicationChangeExplanation = form.MedicationChangeExplanation,
-            KetonesLevel = form.KetonesLevel,
+            KetonesLevel = form.KetonesLevel.ToString("0.0"),
             SleepAmount = form.SleepAmount,
             Notes = form.Notes,
             AmPm = form.AmPm

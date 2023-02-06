@@ -6,6 +6,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { retry, catchError } from 'rxjs/operators';
 import { FormBuilder, FormGroup, NgForm, FormControl, Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SeizureReturn } from 'src/models/seizureReturn.model';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 export enum MedicationChange {
   Yes = 1,
@@ -24,10 +26,11 @@ export class TrackingFormComponent implements OnInit {
   endpoint = '';
   timeRegEx: RegExp = new RegExp('^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$');
   strengthRegEx: RegExp = new RegExp('^[1-9][0-9]*$');
+  decimalRegEx: RegExp = new RegExp('[0-4]');
   time: string = '';
   seizureStrengthInput: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   amPMInput: string[] = ["AM", "PM"];
-  ketoneLevelsInput: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  ketoneLevelsInput: string = "";
   sleepInHoursInput: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   medicationChangeInput: string[] = ["TRUE", "FALSE"]
   seizureTypesInput: string[] = ["Partial", "Music", "Grand MAL", "Partial/Music", "Grand MAL/Music"];
@@ -39,6 +42,7 @@ export class TrackingFormComponent implements OnInit {
   @Input() toggled: "";
   @Output() toggledChange: EventEmitter<string> = new EventEmitter<string>();
 
+
   httpHeader = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -48,8 +52,6 @@ export class TrackingFormComponent implements OnInit {
   ngOnInit() {
   }
 
-  // reg exprssion for HH:SS time
-  // ^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$
   changeAmPm() {
     this.toggled = this.toggled;
     this.toggledChange.emit(this.toggled);
@@ -59,13 +61,13 @@ export class TrackingFormComponent implements OnInit {
   createSeizureForm() {
     this.form = this.builder.group({
       date: new FormControl([Validators.required]),
-      timeOfSeizure: new FormControl("", this.timeValidator(this.timeRegEx)),
-      seizureStrength: new FormControl(0, this.timeValidator(this.strengthRegEx)),
+      timeOfSeizure: new FormControl("", this.regExValidator(this.timeRegEx)),
+      seizureStrength: new FormControl(0, this.regExValidator(this.strengthRegEx)),
       medicationChange: "",
       medicationChangeExplanation: "",
-      ketonesLevel: new FormControl(0, this.timeValidator(this.strengthRegEx)),
+      ketonesLevel: new FormControl("", this.regExValidator(this.decimalRegEx)),
       seizureType: new FormControl("", [Validators.required]),
-      sleepAmount: new FormControl(0, this.timeValidator(this.strengthRegEx)),
+      sleepAmount: new FormControl(0, this.regExValidator(this.strengthRegEx)),
       amPM: new FormControl("", [Validators.required]),
       notes: ""
     })
@@ -80,38 +82,31 @@ export class TrackingFormComponent implements OnInit {
   get amPM() { return this.form.get('amPM') };
   get notes() { return this.form.get('notes') };
 
-  timeValidator(timeRule: RegExp): ValidatorFn {
+  regExValidator(regEx: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const forbidden = timeRule.test(control.value);
+      const forbidden = regEx.test(control.value);
       return !forbidden ? { forbiddenName: { value: control.value } } : null;
     };
   }
 
-  strengthValidator() {
-
-  }
-
-  seizureTypeValidator() {
-
-  }
-
-  ketonesLevelValidator() {
-
-  }
-
-  sleepAmountValidator() {
-
-  }
-
   onSubmit() {
-    this.addUser().subscribe((res: {}) => {
+    this.addSeizure().subscribe((res: {}) => {
       this.message = res != null ? 'Record Successfully Submitted' : 'Something Went Wrong';
       this.snackBar.open(this.message, "CLOSE")
       this.form.reset();
 
     });
   }
-  addUser(): Observable<any> {
+
+  onDateEntry(event: MatDatepickerInputEvent<Date>) {
+    this.queryKetones().subscribe((res: MainForm) => {
+      console.log("Returned ketones level: ", res.ketonesLevel);
+
+      this.form.value.ketonesLevel = res.ketonesLevel;
+    })
+  }
+
+  addSeizure(): Observable<any> {
     console.log('Your form data : ', this.form.value)
 
     return this.httpClient
@@ -136,6 +131,14 @@ export class TrackingFormComponent implements OnInit {
     });
   }
 
-
-
+  queryKetones() {
+    console.log('Date Value : ', this.form.value.date)
+    return this.httpClient
+      .post<any>(
+        this.endpoint + '/seizuretracker/check_ketones',
+        JSON.stringify(this.form.value.date),
+        this.httpHeader
+      )
+      .pipe(retry(1), catchError(this.processError));
+  }
 }

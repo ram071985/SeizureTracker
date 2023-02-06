@@ -29,7 +29,7 @@ public class SeizureTrackerController : ControllerBase
         {
             var records = await _seizureTrackerService.GetRecords(page);
 
-            
+
             return records;
         }
         catch (Exception ex)
@@ -40,6 +40,24 @@ public class SeizureTrackerController : ControllerBase
         }
 
     }
+
+    [HttpPost("check_ketones")]
+    public async Task<SeizureFormDto> CheckKetonesLevels([FromBody] string date)
+    {
+        try
+        {
+            var record = await _seizureTrackerService.CheckForKetones(date);
+
+            return record;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+
+            throw;
+        }
+    }
+
     [HttpPost]
     public async Task<SeizureFormDto> CreateMainFormRecord([FromBody] SeizureFormDto form)
     {
@@ -52,6 +70,7 @@ public class SeizureTrackerController : ControllerBase
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
+
             throw;
         }
     }
