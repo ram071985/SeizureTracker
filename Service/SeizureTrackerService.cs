@@ -6,20 +6,23 @@ public class SeizureTrackerService : ISeizureTrackerService
     private readonly IConfiguration _config;
     private readonly IAzureTableService _azureTableService;
     private string _filter;
+    private int _pageCount;
 
-
+    #region  Construction
     public SeizureTrackerService(IConfiguration config, IAzureTableService azureTableService)
     {
         _config = config;
         _azureTableService = azureTableService;
 
         _filter = "";
+        _pageCount = _config["Pagination:PageCount"].SingleOrDefault();
     }
+    #endregion
 
+    #region Public Methods
     public async Task<SeizureFormReturn> GetRecords(int pageNumber)
     {
         SeizureFormReturn seizures = new();
-        seizures.Seizures = new();
 
         try
         {
@@ -30,21 +33,7 @@ public class SeizureTrackerService : ISeizureTrackerService
 
             var parseRecords = records.Select(r => r.MapToSeizureFormDto()).ToList();
 
-            var groupByDate = parseRecords.GroupBy(r => r.Date).Select(g => g.ToList());
-
-            var groups = groupByDate.ToList();
-
-            var pageSize = 10;
-
-            var skip = pageSize * (pageNumber - 1);
-
-            seizures.Seizures = groupByDate.Select(x => x).Skip(skip).Take(pageSize).ToList();
-
-            var pageCount = groupByDate.Count() > 10 ? (double)groupByDate.Count() / 10 : 1;
-
-            seizures.PageCount = pageCount;
-
-            return seizures;
+            return paginateRecords(parseRecords, pageNumber);
         }
         catch (Exception ex)
         {
@@ -99,8 +88,29 @@ public class SeizureTrackerService : ISeizureTrackerService
         }
 
     }
+    #endregion
+    #region Private Methods
+    private SeizureFormReturn paginateRecords(List<SeizureFormDto> records, int pageNumber)
+    {
+        SeizureFormReturn seizures = new();
+        seizures.Seizures = new();
 
+        var groupByDate = records.GroupBy(r => r.Date).Select(g => g.ToList());
+
+        var groups = groupByDate.ToList();
+
+        var skip = _pageCount * (pageNumber - 1);
+
+        seizures.Seizures = groupByDate.Select(x => x).Skip(skip).Take(_pageCount).ToList();
+
+        var pageCount = groupByDate.Count() > 10 ? (double)groupByDate.Count() / 10 : 1;
+
+        seizures.PageCount = pageCount;
+
+        return seizures;
+    }
     private async Task<List<SeizureForm>> getRecords(string queryFilter) => await _azureTableService.GetRecords(queryFilter);
     private async Task<List<SeizureForm>> getDateRecords(string date) => await _azureTableService.GetRecordsByDate(date);
     private async Task<SeizureForm> addRecord(SeizureForm form) => await _azureTableService.AddRecord(form);
+    #endregion
 }
