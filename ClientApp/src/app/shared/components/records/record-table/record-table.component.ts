@@ -50,6 +50,7 @@ export class RecordTableComponent implements OnInit {
         this.getRecords().subscribe((res: SeizureReturn) => {
             this.loading = false;
             let processPageCount = this.setPageCount(res.pageCount);
+            console.log("Page count: ", processPageCount);
             this.pageIterator = new Array(processPageCount);
             this.seizureRecords = res.seizures;
             console.log('Seizure Records: ', this.seizureRecords);
@@ -60,7 +61,7 @@ export class RecordTableComponent implements OnInit {
         if (pageCount % 1 != 0) {
             return Math.floor(pageCount + 1);
         }
-        return;
+        return pageCount;
     }
 
     changePageNumber(pageNumber: number) {

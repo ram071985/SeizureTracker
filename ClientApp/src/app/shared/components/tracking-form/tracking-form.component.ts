@@ -65,7 +65,7 @@ export class TrackingFormComponent implements OnInit {
       seizureStrength: new FormControl(0, this.regExValidator(this.strengthRegEx)),
       medicationChange: "",
       medicationChangeExplanation: "",
-      ketonesLevel: new FormControl("", this.regExValidator(this.decimalRegEx)),
+      ketonesLevel: new FormControl("0", this.regExValidator(this.decimalRegEx)),
       seizureType: new FormControl("", [Validators.required]),
       sleepAmount: new FormControl(0, this.regExValidator(this.strengthRegEx)),
       amPM: new FormControl("", [Validators.required]),
@@ -100,9 +100,13 @@ export class TrackingFormComponent implements OnInit {
 
   onDateEntry(event: MatDatepickerInputEvent<Date>) {
     this.queryKetones().subscribe((res: MainForm) => {
-      console.log("Returned ketones level: ", res.ketonesLevel);
+      if (res?.ketonesLevel == "0" || res?.ketonesLevel == null) {
+        this.form.value.ketonesLevel = "0";
+      }
+      else {
+        this.form.value.ketonesLevel = res.ketonesLevel
+      }
 
-      this.form.value.ketonesLevel = res.ketonesLevel;
     })
   }
 

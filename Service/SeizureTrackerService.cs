@@ -15,7 +15,7 @@ public class SeizureTrackerService : ISeizureTrackerService
         _azureTableService = azureTableService;
 
         _filter = "";
-        _pageCount = _config["Pagination:PageCount"].SingleOrDefault();
+        _pageCount = int.Parse(_config["Pagination:PageCount"]);
     }
     #endregion
 
@@ -23,7 +23,6 @@ public class SeizureTrackerService : ISeizureTrackerService
     public async Task<SeizureFormReturn> GetRecords(int pageNumber)
     {
         SeizureFormReturn seizures = new();
-
         try
         {
             var records = await getRecords(_filter);
@@ -58,7 +57,7 @@ public class SeizureTrackerService : ISeizureTrackerService
 
             var parseRecords = records.Select(r => r.MapToSeizureFormDto()).ToList();
 
-            seizure = parseRecords.FirstOrDefault(x => double.Parse(x.KetonesLevel) > 0.0d);
+            seizure = parseRecords.OrderByDescending(x => double.Parse(x.KetonesLevel)).FirstOrDefault();
 
             return seizure;
         }

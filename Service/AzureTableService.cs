@@ -28,7 +28,6 @@ public class AzureTableService : IAzureTableService
     public async Task<List<SeizureForm>> GetRecords(string queryFilter = "")
     {
         List<SeizureForm> seizureRecords = new();
-
         try
         {
             var tableClient = await GetTableClient();
@@ -39,8 +38,7 @@ public class AzureTableService : IAzureTableService
                 seizureRecords.Add(entity);
             }
 
-            if (!String.IsNullOrEmpty(queryFilter))
-                seizureRecords = seizureRecords.OrderByDescending(x => DateTime.Parse(x.Date)).ThenByDescending(x => DateTime.Parse(x.TimeOfSeizure)).ToList();
+            seizureRecords = seizureRecords.OrderByDescending(x => DateTime.Parse(x.Date)).ThenByDescending(x => DateTime.Parse(x.TimeOfSeizure)).ToList();
 
             return seizureRecords;
         }
