@@ -21,6 +21,8 @@ import { DatePipe } from '@angular/common';
 import { ExpansionItemComponent } from './shared/components/records/record-table-items/expansion-item/expansion-item.component';
 import { ExpansionRowComponent } from './shared/components/records/record-table-items/expansion-item/expansion-row/expansion-row.component';
 import { PaginationComponent } from './shared/components/pagination/pagination.component';
+import { DataComponent } from './shared/components/data/data.component';
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,8 @@ import { PaginationComponent } from './shared/components/pagination/pagination.c
     RecordTableItemsComponent,
     ExpansionItemComponent,
     ExpansionRowComponent,
-    PaginationComponent
+    PaginationComponent,
+    DataComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -46,11 +49,13 @@ import { PaginationComponent } from './shared/components/pagination/pagination.c
     RouterModule.forRoot([
       { path: '', component: MainComponent },
       { path: 'records', component: RecordsComponent },
+      { path: 'data', component: DataComponent }
     ]),
     BrowserAnimationsModule,
     NgMaterialModule,
     ReactiveFormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgChartsModule
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]
