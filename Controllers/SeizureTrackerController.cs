@@ -27,8 +27,26 @@ public class SeizureTrackerController : ControllerBase
     {
         try
         {
-            var records = await _seizureTrackerService.GetRecords(page);
+            var records = await _seizureTrackerService.GetPaginatedRecords(page);
 
+
+            return records;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+
+            throw;
+        }
+
+    }
+
+    [HttpGet("data")]
+    public async Task<SeizureFormReturn> GetFilteredRecords()
+    {
+        try
+        {
+            var records = await _seizureTrackerService.GetFilteredRecords();
 
             return records;
         }

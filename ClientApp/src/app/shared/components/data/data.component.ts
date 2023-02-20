@@ -43,7 +43,7 @@ export class DataComponent {
 
     httpHeader = {
         headers: new HttpHeaders({
-            'Content-Type': 'application/json'
+            'Accept': 'application/json'
         }),
     };
 
@@ -61,7 +61,7 @@ export class DataComponent {
         //  this.loading = true;
         return this.httpClient
             .get<any>(
-                this.endpoint + '/seizuretracker/records',
+                this.endpoint + '/seizuretracker/data',
                 this.httpHeader
             )
             .pipe(retry(1), catchError(err => { throw 'The query failed. Details: ' + err }));
