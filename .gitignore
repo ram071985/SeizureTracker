@@ -24,6 +24,7 @@
 
 # IDE - VSCode
 .vscode/*
+
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
@@ -42,7 +43,7 @@
 # System Files
 .DS_Store
 Thumbs.db
-
+appsettings.json
 # User-specific files
 *.suo
 *.user
