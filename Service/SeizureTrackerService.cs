@@ -38,33 +38,21 @@ public class SeizureTrackerService : ISeizureTrackerService
 
     }
 
-    public async Task<SeizureFormReturn> GetFilteredRecords()
+    public async Task<List<(DateTime, int)>> GetFilteredRecords()
     {
-        SeizureFormReturn seizures = new();
-        seizures.Seizures = new();
-
-        List<(DateTime, int)> dick = new();
+        List<(DateTime, int)> totalSeizureSet = new();
 
         try
         {
             var parseRecords = await mapRecords();
+
             var groupByDate = parseRecords.GroupBy(r => r.Date).Select(g => g.ToList());
 
-            
             var groups = groupByDate.ToList();
-            
-            var firstRecord = DateTime.Parse(groups[groups.Count - 1][0].Date);
-            var lastRecord = DateTime.Parse(groups[0][0].Date);
 
-            
-               
-            foreach (DateTime day in eachDay(firstRecord, lastRecord))
-            {
-                dick.Add((DateTime.Parse(groups.FirstOrDefault(x => DateTime.Parse(x[0].Date) == day)[0].Date), groups.FirstOrDefault(x => DateTime.Parse(x[0].Date) == day).Count));
-            }
-            seizures.Seizures = groups;
+            totalSeizureSet = await filterSeizureCount(groups, totalSeizureSet.OrderBy(x => x.Item1).ToList());
 
-            return seizures;
+            return totalSeizureSet;
         }
         catch (Exception ex)
         {
@@ -72,7 +60,6 @@ public class SeizureTrackerService : ISeizureTrackerService
 
             throw;
         }
-
     }
 
     public async Task<SeizureFormDto> CheckForKetones(string date)
@@ -127,6 +114,28 @@ public class SeizureTrackerService : ISeizureTrackerService
         for (var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
             yield return day;
     }
+
+    private async Task<List<(DateTime, int)>> filterSeizureCount(List<List<SeizureFormDto>> groups, List<(DateTime, int)> totalSeizureSet)
+    {
+        foreach (var date in groups)
+        {
+            totalSeizureSet.Add((DateTime.Parse(date[0].Date), date.Count));
+        }
+
+        for (int i = 0; i < totalSeizureSet.Count - 1; i++)
+        {
+            DateTime currrent = totalSeizureSet[i].Item1;
+            DateTime next = totalSeizureSet[i + 1].Item1;
+            DateTime expected = currrent.AddDays(1);
+
+            if (next != expected)
+            {
+                totalSeizureSet.Insert(++i, (expected, 0));
+            }
+        }
+        return totalSeizureSet;
+    }
+
     private async Task<List<SeizureFormDto>> mapRecords()
     {
         List<SeizureFormDto> seizures = new();

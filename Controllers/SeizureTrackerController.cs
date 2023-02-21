@@ -42,7 +42,7 @@ public class SeizureTrackerController : ControllerBase
     }
 
     [HttpGet("data")]
-    public async Task<SeizureFormReturn> GetFilteredRecords()
+    public async Task<List<(DateTime, int)>> GetFilteredRecords()
     {
         try
         {
